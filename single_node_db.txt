@@ -44,6 +44,10 @@ create table plantparameters (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), nam
 create table envreadings( sys_id UUID DEFAULT gen_random_uuid(), sensor_id INT, sensorname STRING, sensortype STRING, PRIMARY KEY(sys_id, sensor_id));
 
 
+#show create statement 
+SHOW CREATE TABLE ENVREADINGS;
+
+
 
 
 
