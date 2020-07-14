@@ -1,0 +1,27 @@
+5-Node cluster on windows 
+Ctrl+R => open powershell 
+
+.\cockroach.exe start --insecure --listen-addr=localhost:26257 --join=localhost:26257,localhost:26258,localhost:26259 ` --http-addr=localhost:8080 --store=cockroach-data-1 
+
+.\cockroach.exe start --insecure --listen-addr=localhost:26258 --join=localhost:26257,localhost:26258,localhost:26259 `
+  --http-addr=localhost:8081 --store=cockroach-data-2
+  
+.\cockroach.exe start --insecure --listen-addr=localhost:26259 --join=localhost:26257,localhost:26258,localhost:26259 `
+--http-addr=localhost:8082 --store=cockroach-data-3
+
+initializing cockroachdb
+cockroach init --host localhost:26258 --insecure 
+
+http://localhost:8081
+
+Now lets add two more nodes to the existing cluster
+
+.\cockroach.exe start --insecure --listen-addr=localhost:26260 `
+  --join=localhost:26257,localhost:26258,localhost:26259,localhost:26260,localhost:26261 `
+  --http-addr=localhost:8083 --store=cockroach-data-4
+
+.\cockroach.exe start --insecure --listen-addr=localhost:26261 `
+  --join=localhost:26257,localhost:26258,localhost:26259,localhost:26260,localhost:26261 `
+  --http-addr=localhost:8084 --store=cockroach-data-5
+
+
