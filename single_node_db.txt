@@ -1,0 +1,53 @@
+#Single Node Cockroach database 
+#download cockroachdb and extract it to windows
+https://www.cockroachlabs.com/docs/v19.2/install-cockroachdb-windows.html 
+
+#cd to the extracted directory
+
+.\cockroach.exe start-single-node --insecure --listen-addr=localhost:26257 --http-addr=localhost:8080
+
+#navigate to the webadmin 
+#http://localhost:8080/#/overview/list 
+
+#loading data to cockroachdb 
+.\cockroach.exe workload init movr
+
+#Connecting to SQL prompt 
+.\cockroach sql --insecure 
+
+#listing all the databases 
+show databases;
+
+#display the current database info
+show database;
+
+#listing all tables in the database 
+show tables from movr;
+
+#Querying data from a select database.table
+select * from movr.rides limit 100;
+select * from movr.promo_codes limit 10;
+
+#creating a new database
+create database sycliq_db;
+
+#list databases
+show databases;
+
+#set database 
+set database= sycliq_db;
+
+#create table in the current database with primary key
+create table plantparameters (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), name STRING, scientificname STRING);
+
+#create table with composite primary key 
+create table envreadings( sys_id UUID DEFAULT gen_random_uuid(), sensor_id INT, sensorname STRING, sensortype STRING, PRIMARY KEY(sys_id, sensor_id));
+
+
+
+
+
+
+
+
+
