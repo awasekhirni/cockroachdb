@@ -1,0 +1,5 @@
+docker build --tag cockroachdb:1.0 .
+docker run --publish 8080:8080 --detach --name cockroachdb cockroachdb:1.0
+
+docker commit -m "Added Cockroachdb" -a "cockroachdb" cockroachdb syedawase/cockroachdb:latest
+docker push syedawase/cockroachdb
