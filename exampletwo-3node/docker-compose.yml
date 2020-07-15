@@ -1,0 +1,49 @@
+version: "3.5"
+
+services:
+  wahed:
+    container_name: wahed 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/wahed:/cockroachdb/cockroach-data 
+    command: start --insecure 
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    networks:
+      exampletwo-3node_cockroachdb_net:
+        aliases:
+          - wahed 
+  
+  itnan:
+    container_name: itnan 
+    image: cockroachdb/cockroach:latest 
+    volumes:
+      - ./cockroach-data/itnan:/cockroach/cockroach-data 
+    command: start --insecure --join=wahed 
+    depends_on:
+      - wahed
+    networks:
+      exampletwo-3node_cockroachdb_net:
+        aliases:
+          - itnan 
+  
+  talata:
+    container_name: talata 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/talata:/cockroach/cockroach-data
+    command: start --insecure --join=wahed
+    depends_on:
+      - wahed
+    networks:
+      exampletwo-3node_cockroachdb_net:
+        aliases:
+          - talata 
+
+  
+networks:
+  exampletwo-3node_cockroachdb_net:
+    driver: bridge 
+
+

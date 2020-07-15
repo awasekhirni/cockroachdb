@@ -1,0 +1,9 @@
+copyright 2020 Syed Awase Khirni 
+Cockroachdatabase 
+
+1. docker network create -d bridge cockroachdb_net 
+
+2. docker-compose up
+
+3.http://localhost:8080 
+You should see 3 nodes running successfully.
