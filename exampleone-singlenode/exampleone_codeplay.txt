@@ -1,0 +1,12 @@
+Copyright 2020 Syed Awase Khirni awasekhirni@gmail.com 
+
+
+docker-compose up 
+http://localhost:8080 
+
+
+docker build --tag cockroachdb:1.0 .
+docker run --publish 8080:8080 --detach --name cockroachdb cockroachdb:1.0
+
+docker commit -m "Added Cockroachdb" -a "cockroachdb" cockroachdb syedawase/cockroachdb:latest
+docker push syedawase/cockroachdb

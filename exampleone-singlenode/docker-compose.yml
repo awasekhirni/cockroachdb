@@ -1,0 +1,23 @@
+version: '3.5'
+
+services:
+
+  cockroachone:
+    container_name: cockroachone
+    hostname: sycliq
+    image: cockroachdb/cockroach:latest
+    command: start-single-node --cluster-name=exampleone-singlenode --logtostderr=WARNING --log-file-verbosity=WARNING --insecure
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+
+  cockroachone-init:
+    container_name: cockroachone-init
+    hostname: cockroachone-init
+    image: syedawase/cockroachdb:latest
+    environment:
+      - COCKROACH_HOST=sycliq:26257
+      - COCKROACH_INSECURE=true
+      - DATABASE_NAME=sycliqone
+    depends_on:
+      - cockroachone
