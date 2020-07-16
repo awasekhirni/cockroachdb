@@ -1,0 +1,84 @@
+version: "3.5"
+
+services:
+  wahed:
+    container_name: wahed 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/wahed:/cockroachdb/cockroach-data 
+    command: start --insecure 
+    ports:
+      - "26257:26257"
+      - "8080:8080"
+    networks:
+      ex3-5node:
+        aliases:
+          - wahed 
+  
+  itnan:
+    container_name: itnan 
+    image: cockroachdb/cockroach:latest 
+    volumes:
+      - ./cockroach-data/itnan:/cockroach/cockroach-data 
+    command: start --insecure --join=wahed 
+    depends_on:
+      - wahed
+    networks:
+      ex3-5node:
+        aliases:
+          - itnan 
+  
+  talata:
+    container_name: talata 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/talata:/cockroach/cockroach-data
+    command: start --insecure --join=wahed
+    depends_on:
+      - wahed
+    networks:
+      ex3-5node:
+        aliases:
+          - talata 
+
+  araba:
+    container_name: araba 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/araba:/cockroach/cockroach-data
+    command: start --insecure --join=wahed
+    depends_on:
+      - wahed
+    networks:
+      ex3-5node:
+        aliases:
+          - araba 
+
+
+  khamsa:
+    container_name: khamsa 
+    image: cockroachdb/cockroach:latest
+    volumes:
+      - ./cockroach-data/khamsa:/cockroach/cockroach-data
+    command: start --insecure --join=wahed
+    depends_on:
+      - wahed
+    networks:
+      ex3-5node:
+        aliases:
+          - khamsa 
+
+  wahed-init:
+    image: cockroachdb/cockroach:latest
+    networks:
+     - ex3-5node
+    volumes:
+     - ./setup_db.sh:/setup_db.sh
+    entrypoint: "/bin/bash"
+    command: /setup_db.sh
+  
+networks:
+  ex3-5node:
+    driver: bridge 
+
+

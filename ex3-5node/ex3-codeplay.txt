@@ -1,0 +1,4 @@
+copyright 2020 Syed Awase Khirni 
+
+docker-compose up 
+
