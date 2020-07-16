@@ -1,0 +1,10 @@
+Copyright 2020 Syed Awase Khirni 
+www.elain-tech.com www.sycliq.com www.territorialprescience.com 
+
+1.create Dockerfile 
+2. create nginx.conf configurator 
+3.docker build --tag lb-nginx:1.0 . 
+docker run --publish 8080:8080 --detach --name lb-nginx lb-nginx:1.0
+
+docker commit -m "Added loadbalancer nginx" -a "lb-nginx" lb-nginx syedawase/lb-nginx:latest
+docker push syedawase/lb-nginx 
