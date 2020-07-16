@@ -1,0 +1,9 @@
+Copyright 2020 Syed Awase Khirni 
+awasekhirni@gmail.com 
+www.elain-tech.com www.sycliq.com www.territorialprescience.com 
+
+docker build --tag securecockroachdb:1.0 . 
+docker run --publish 8080:8080 --detach --name securecockroachdb securecockroachdb:1.0
+
+docker commit -m "Added Secure Cockroachdb" -a "securecockroachdb" securecockroachdb syedawase/securecockroachdb:latest
+docker push syedawase/securecockroachdb
