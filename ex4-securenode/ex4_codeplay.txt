@@ -1,0 +1,36 @@
+Copyright 2020 Syed Awase Khirni 
+awasekhirni@gmail.com www.sycliq.com www.territorialprescience.com
+www.elain-tech.com 
+
+#Objective: to create a secure node cluster on windows.
+
+#create directories
+mkdir certs 
+mkdir my-safe-directory
+#generate certificates and keys 
+C:\\cockroachdb\\cockroach.exe cert create-ca --certs-dir=certs --ca-key=my-safe-directory/ca.key
+
+#create a client key pair for the root user 
+C:\\cockroachdb\\cockroach.exe
+cert create-client root --certs-dir=certs --ca-key=my-safe-directory/ca.key
+
+
+#create a key pair for the nodes 
+C:\\cockroachdb\\cockroach.exe cert create-node localhost $(hostname) --certs-dir=certs --ca-key=my-safe-directory/ca.key
+
+
+#starting the first node 
+C:\\cockroachdb\\cockroach.exe start --certs-dir=certs --host=localhost --http-host=localhost
+
+#adding nodes to the first node 
+C:\\cockroachdb\\cockroach.exe start --certs-dir=certs --store=node2 --host=localhost --port=26258 --http-port=8081 --http-host=localhost --join=localhost:26257 
+
+#adding nodes to the first node 
+C:\\cockroachdb\\cockroach.exe start --certs-dir=certs --store=node3 --host=localhost --port=26259 --http-port=8082 --http-host=localhost --join=localhost:26257
+
+
+#Executing the SQL Commands 
+C:\\cockroachdb\\cockroach.exe sql --certs-dir=certs --port=26257 
+
+#lets create user for loggin into the webadmin dashboard
+CREATE USER syed WITH PASSWORD 'dbp@ssw0rd';
