@@ -1,0 +1,46 @@
+Copyright 2020 Syed Awase Khirni 
+awasekhirni@gmail.com 
+www.elain-tech.com www.sycliq.com www.territorialprescience.com
+
+1.create two folders 
+  mkdir generate-certs => generating certificate for secure cockroachdb
+  mkdir lb-nginx => creating a loadbalancer using nginx. 
+
+2. Create a Dockerfile in generate-certs to create certificates for 3 node cluster that we are going to spin up 
+3. lets create certs and safe directories 
+    mkdir generate-certs/certs
+    mkdir generate-certs/safe
+
+4. now lets build the docker image and pushit hub.docker
+docker build --tag generate-certs-cockroach:1.0 .
+docker run --publish 8080:8080 --detach --name generate-certs-cockroach generate-certs-cockroach:1.0
+
+docker commit -m "Added Generate Certificates Cockroach" -a "generate-certs-cockroach" generate-certs-cockroach syedawase/generate-certs-cockroach:latest
+docker push syedawase/generate-certs-cockroach
+
+5. Now lets go and create the LOAD BALANCER USING NGINX 
+ cd lb-nginx 
+6. create lb-nginx/Dockerfile 
+7. create lb-nginx/nginx.conf
+8. now lets build the docker image and pushit hub.docker 
+docker build --tag lb-nginx-cockroach:1.0 .
+docker run --publish 8080:8080 --detach --name lb-nginx-cockroach lb-nginx-cockroach:1.0
+
+docker commit -m "Added Loadbalancer using nginx for Cockroachdb" -a "lb-nginx-cockroach" lb-nginx-cockroach syedawase/lb-nginx-cockroach:latest
+docker push syedawase/lb-nginx-cockroach
+
+9.now lets go and create cluster composition => docker-compose.yml 
+
+10. docker-compose up 
+
+11. open another shell and we shall copy the certificates to the certificates folder 
+docker cp roach-cert:/certs/client/client.root.crt certs/
+docker cp roach-cert:/certs/client/client.root.key certs/
+docker cp roach-cert:/certs/client/client.root.key.pk8 certs/
+
+12. now lets create a user login to connect to the database 
+#Executing the SQL Commands 
+C:\\cockroachdb\\cockroach.exe sql --certs-dir=certs --port=26257 
+
+#lets create user for loggin into the webadmin dashboard
+CREATE USER syed WITH PASSWORD 'dbp@ssw0rd';

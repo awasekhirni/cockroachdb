@@ -1,0 +1,107 @@
+version: '3.5'
+
+volumes:
+  certs-wahed:
+  certs-itnan:
+  certs-talata:
+  certs-client:
+
+
+services:
+
+  
+
+  generate-certs:
+    container_name: generate-certs 
+    hostname: generate-certs 
+    build: generate-certs 
+    volumes:
+      - certs-wahed:/certs/wahed
+      - certs-itnan:/certs/itnan 
+      - certs-talata:/certs/talata
+      - certs-client:/certs/client
+  
+  wahed:
+    container_name: wahed
+    hostname: wahed
+    image: cockroachdb/cockroach:latest
+    command: start --cluster-name=ex5-secureclstr --logtostderr=WARNING --log-file-verbosity=WARNING --certs-dir=/certs
+    volumes:
+      - certs-wahed:/certs
+    depends_on:
+      - generate-certs
+    networks:
+      ex5-secureclstr:
+        aliases:
+          - wahed
+
+  itnan:
+    container_name: itnan
+    hostname: itnan
+    image: cockroachdb/cockroach:latest
+    command: start --cluster-name=ex5-secureclstr --logtostderr=WARNING --log-file-verbosity=WARNING --certs-dir=/certs --join=wahed
+    volumes:
+      - certs-itnan:/certs
+    depends_on:
+      - generate-certs
+      - wahed
+    networks:
+      ex5-secureclstr:
+        aliases:
+          - itnan
+  
+  talata:
+    container_name: talata
+    hostname: talata
+    image: cockroachdb/cockroach:latest
+    command: start --cluster-name=ex5-secureclstr --logtostderr=WARNING --log-file-verbosity=WARNING --certs-dir=/certs --join=wahed
+    volumes:
+      - certs-talata:/certs
+    depends_on:
+      - generate-certs
+      - wahed
+    networks:
+      ex5-secureclstr:
+        aliases:
+          - talata
+  
+  loadbalancer:
+    container_name: loadbalancer
+    hostname: loadbalancer 
+    build: lb-nginx 
+    ports: 
+      - "5432:5432"
+      - "8080:8080"
+    depends_on:
+      - wahed 
+      - itnan 
+      - talata
+    networks:
+      ex5-secureclstr:
+        aliases:
+          - loadbalancer
+  
+  client-cockroach:
+    container_name: client-cockroach 
+    hostname: client-cockroach 
+    image: syedawase/client-cockroachdb:latest 
+    environment:
+      - COCKROACH_HOST=localhost:5432
+      - COCKROACH_INSECURE=false 
+      - COCKROACH_CERTS_DIR=/certs
+      - DATABASE_NAME=sycliqone
+      - DATABASE_USER=syed
+      - DATABASE_PASSWORD=dbp@ssw0rd 
+    volumes:
+      - certs-client:/certs 
+    depends_on:
+      - loadbalancer
+      - generate-certs
+    networks:
+      ex5-secureclstr:
+        aliases:
+          - client-cockroach
+
+networks:
+  ex5-secureclstr:
+    driver: bridge 
