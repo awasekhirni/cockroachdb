@@ -44,3 +44,5 @@ C:\\cockroachdb\\cockroach.exe sql --certs-dir=certs --port=26257
 
 #lets create user for loggin into the webadmin dashboard
 CREATE USER syed WITH PASSWORD 'dbp@ssw0rd';
+
+13. logon to webadmin http://localhost:8080
